@@ -1,0 +1,429 @@
+/* Navbar styles */
+.project-page #navbar {
+    width: 95%;
+    max-width: 1400px;
+    position: fixed;
+    top: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    background: rgba(var(--bg-secondary-rgb), 0.8);
+    padding: 0.75rem 1.25rem;
+    border-radius: var(--radius-2);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: var(--gray-border);
+    transition: all 0.3s ease;
+}
+
+.project-page #navbar.scrolled {
+    box-shadow: 0 3px 10px rgba(0, 0, 0, 0.1);
+}
+
+.project-page #navbar.drop {
+    position: fixed;
+    animation: drop 1s;
+}
+
+@keyframes drop {
+    0% { top: -100%; }
+    100% { top: 20px; }
+}
+
+.project-page #navbar .navbar-controls {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 1.5rem;
+}
+
+.project-page #navbar .logo {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    padding: 0.5rem;
+}
+
+.project-page #navbar .logo img {
+    width: 40px;
+    height: 40px;
+}
+
+.project-page #navbar .nav__routes {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 30px;
+    margin: 0;
+    overflow-x: auto;
+    scrollbar-width: none;
+    -ms-overflow-style: none;
+}
+
+.project-page #navbar .nav__routes::-webkit-scrollbar {
+    display: none;
+}
+
+.project-page #navbar .route {
+    white-space: nowrap;
+    padding: 0.5rem 1rem;
+    font-size: 0.95rem;
+    font-weight: 700;
+    display: block;
+    cursor: pointer;
+    transition: var(--transition);
+}
+
+.project-page #navbar .route.active {
+    color: var(--color-primary);
+}
+
+.project-page #navbar .controls {
+    flex-shrink: 0;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    margin-left: 0;
+}
+
+/* Theme toggle styles */
+.project-page #navbar .theme__toggle {
+    cursor: pointer;
+    margin-right: 0;
+}
+
+.project-page #navbar .theme__toggle input {
+    display: none;
+}
+
+.project-page #navbar .theme__toggle .icon__container {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.project-page #navbar .theme__toggle .sun,
+.project-page #navbar .theme__toggle .moon {
+    transform: scale(0);
+    transition: var(--transition);
+    color: var(--text-color);
+}
+
+.project-page #navbar .theme__toggle input:not(:checked) ~ .icon__container .sun {
+    transform: scale(1);
+}
+
+.project-page #navbar .theme__toggle input:checked ~ .icon__container .moon {
+    transform: scale(1);
+}
+
+/* Project details styles */
+.project-image-container {
+    position: relative;
+    margin-bottom: 1rem;
+    border-radius: var(--radius-2);
+    overflow: hidden;
+}
+
+.project-buttons {
+    position: absolute;
+    bottom: 1rem;
+    right: 1rem;
+    display: flex;
+    gap: 0.5rem;
+}
+
+.screenshots-container {
+    display: flex;
+    gap: 1rem;
+    margin: 2rem 0;
+}
+
+.project-screenshot {
+    flex: 1;
+    max-width: 50%;
+    height: auto;
+    object-fit: cover;
+    border-radius: var(--radius-2);
+    cursor: pointer;
+    transition: transform 0.3s ease;
+}
+
+.project-screenshot:hover {
+    transform: scale(1.02);
+}
+
+/* Section styles */
+.section-heading {
+    font-size: 2.5rem;
+    margin-bottom: 1.5rem;
+    color: var(--color-primary);
+}
+
+.section-subheading {
+    font-size: 1.8rem;
+    margin-top: 1.5rem;
+    margin-bottom: 1rem;
+    color: var(--text-color);
+}
+
+.section-description {
+    font-size: 1.1rem;
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.section-list {
+    list-style-type: none;
+    padding-left: 0;
+    margin-bottom: 2rem;
+}
+
+.section-list li {
+    font-size: 1rem;
+    line-height: 1.5;
+    margin-bottom: 0.5rem;
+    position: relative;
+    padding-left: 1.5rem;
+}
+
+.section-list li::before {
+    content: '•';
+    color: var(--color-primary);
+    position: absolute;
+    left: 0;
+    top: 0;
+}
+
+/* Section spacing */
+#project-overview,
+#project-features,
+#project-implementation,
+#project-conclusion {
+    margin-bottom: 3rem;
+    padding-top: 2rem;
+}
+
+/* Back to top button */
+#backToTopBtn {
+    position: relative;
+    bottom: 90px;
+    margin-left: -70px;
+    transform: translateX(0);
+    z-index: 99;
+}
+
+/* Lightbox styles */
+.lightbox {
+    display: none;
+    position: fixed;
+    z-index: 999;
+    padding-top: 100px;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgba(0,0,0,0.9);
+}
+
+.lightbox-content {
+    margin: auto;
+    display: block;
+    width: 90%;
+    max-width: 1200px;
+    max-height: 80vh;
+    object-fit: contain;
+}
+
+.close {
+    position: absolute;
+    top: 15px;
+    right: 35px;
+    color: #f1f1f1;
+    font-size: 40px;
+    font-weight: bold;
+    transition: 0.3s;
+}
+
+.close:hover,
+.close:focus {
+    color: #bbb;
+    text-decoration: none;
+    cursor: pointer;
+}
+
+/* Sidebar styles for project page */
+.project-page .sidebar {
+    background: rgba(var(--bg-secondary-rgb), 0.95);
+}
+
+.project-page .sidebar .middle {
+    padding-top: 4rem;
+}
+
+.project-page .sidebar .navitem {
+    font-size: 1.1rem;
+    padding: 1rem 2rem;
+    width: 100%;
+    text-align: left;
+    border-left: 3px solid transparent;
+}
+
+.project-page .sidebar .navitem.active {
+    color: var(--color-primary);
+    border-left-color: var(--color-primary);
+    background: rgba(var(--color-primary-rgb), 0.1);
+}
+.project-image-container {
+    position: relative;
+    margin: 1rem auto 2rem;
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+}
+
+.project-image-container img {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    object-fit: cover;
+    border-radius: var(--radius-2);
+}
+
+.project-buttons {
+    display: flex;
+    gap: 1rem;
+    flex-wrap: wrap;
+    justify-content: flex-end;
+}
+
+/* Responsive styles */
+@media (max-width: 1200px) {
+    .project-page #navbar .route {
+        padding: 0.5rem 0.4rem;
+        font-size: 0.9rem;
+    }
+    
+    .section-heading {
+        font-size: 2.2rem;
+    }
+    
+    .section-subheading {
+        font-size: 1.6rem;
+    }
+    .project-image-container {
+        max-width: 100%;
+        padding: 0 1rem;
+    }
+}
+
+@media (max-width: 900px) {
+    .project-page #navbar .nav__routes {
+        gap: 15px;
+    }
+    
+    .project-page #navbar .route {
+        padding: 0.4rem 0.6rem;
+        font-size: 0.85rem;
+    }
+    
+    .section-heading {
+        font-size: 2rem;
+    }
+    
+    .section-subheading {
+        font-size: 1.4rem;
+    }
+}
+
+@media (max-width: 768px) {
+    .project-page #navbar {
+        width: 90%;
+        padding: 0.5rem 1rem;
+    }
+
+    .project-page #navbar .nav__routes {
+        display: none;
+    }
+
+    .project-page #navbar .navbar-controls {
+        gap: 1rem;
+    }
+
+    .project-page #navbar .menu__btn {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+
+    .screenshots-container {
+        flex-direction: column;
+    }
+
+    .project-screenshot {
+        max-width: 100%;
+    }
+
+    .section-heading {
+        font-size: 1.8rem;
+    }
+
+    .section-subheading {
+        font-size: 1.3rem;
+    }
+
+    .section-description {
+        font-size: 1rem;
+    }
+    .project-image-container {
+        margin: 0.5rem auto 1rem;
+        padding: 0 0.5rem;
+    }
+    
+    .project-image-container img {
+        border-radius: var(--radius-1);
+    }
+}
+
+@media (max-width: 480px) {
+    .project-page #navbar {
+        width: 95%;
+        padding: 0.4rem 0.8rem;
+    }
+
+    .project-page #navbar .logo {
+        padding: 0.3rem;
+    }
+
+    .project-page #navbar .logo img {
+        width: 32px;
+        height: 32px;
+    }
+
+    .project-buttons {
+        position: relative;
+        bottom: auto;
+        right: auto;
+        margin-top: 1rem;
+    }
+
+    .section-heading {
+        font-size: 1.6rem;
+    }
+
+    .section-subheading {
+        font-size: 1.2rem;
+    }
+    .project-buttons {
+        justify-content: center;
+    }
+    
+    .project-image-container {
+        padding: 0 0.25rem;
+    }
+}
