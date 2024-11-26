@@ -4,7 +4,7 @@ import React, { useState, useEffect } from 'react';
 import Image from 'next/image';
 import Link from 'next/link';
 import '../styles/ProjectDescription.css';
-import AnimateOnScroll from '../components/AnimateOnScroll'
+import AnimateOnScroll from './AnimateOnScroll'
 import { ArrowLeft, ExternalLink, Github, Sun, Moon, Menu, X, ArrowUp } from 'lucide-react';
 
 export default function ProjectDescription({ project, onBack }) {

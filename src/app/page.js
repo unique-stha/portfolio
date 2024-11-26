@@ -3,7 +3,7 @@
 import React, { useState, useRef, useEffect } from 'react'
 import { createPortal } from 'react-dom'
 import { Sun, Moon, Menu, X, ArrowRight, SquareArrowOutUpRight } from 'lucide-react'
-import Spline from '@splinetool/react-spline'
+import dynamic from 'next/dynamic'
 import Image from 'next/image'
 import Typewriter from "typewriter-effect"
 import emailjs from "emailjs-com"
@@ -14,11 +14,20 @@ import AnimateOnScroll from '../components/AnimateOnScroll'
 import '../styles/HomePage.css'
 import '../styles/navbar.css'
 
+
+
+// Dynamic import of Spline component with SSR disabled
+const Spline = dynamic(() => import('@splinetool/react-spline').then(mod => mod.default), {
+  ssr: false,
+  loading: () => <div className="flex items-center justify-center min-h-[500px]">Loading 3D Scene...</div>
+})
+
 const HomePage = () => {
   const [theme, setTheme] = useState('dark')
   const [isSidebarOpen, setIsSidebarOpen] = useState(false)
   const [selectedProject, setSelectedProject] = useState(null)
   const [isScrolled, setIsScrolled] = useState(false)
+  const [mounted, setMounted] = useState(false)
   const projectsSectionRef = useRef(null)
   const [isReturningFromProject, setIsReturningFromProject] = useState(false)
   
@@ -28,6 +37,7 @@ const HomePage = () => {
   }
 
   useEffect(() => {
+    setMounted(true)
     document.documentElement.setAttribute('data-theme', theme)
     localStorage.setItem('theme', theme)
 
@@ -123,115 +133,120 @@ const HomePage = () => {
     )
   }
 
+  if (!mounted) {
+    return null // Prevent hydration issues
+  }
+
   return (
     <>
       {!isSidebarOpen && (
-  <nav id="navbar" className={`${isScrolled ? 'drop' : ''}`}>
-    <div className="flex items-center justify-between w-full">
-      <div className="logo">
-        <Image src="/assets/icons/logo.svg" alt="Logo" width={30} height={40} />
-      </div>
-      <div className="nav__routes hidden md:flex space-x-6">
-        <a href="#header" className="route">Home</a>
-        <a href="#about" className="route">About</a>
-        <a href="#services" className="route">Interests</a>
-        <a href="#projects" className="route">Projects</a>
-        <a href="#contact" className="route">Contact</a>
-      </div>
-      <div className="navbar-controls">
-        <label className="theme__toggle">
-          <input type="checkbox" checked={theme === 'dark'} onChange={toggleTheme} className="hidden" />
-          <div className="icon__container">
-            {theme === 'light' ? <Sun className="sun" /> : <Moon className="moon" />}
-          </div>
-        </label>
-        <div className="icon__container menu__btn md:hidden">
-          <Menu onClick={toggleSidebar} />
-        </div>
-      </div>
-    </div>
-  </nav>
-)}
-
-{isSidebarOpen && createPortal(
-  <aside className="sidebar visible">
-    <div className="sidebar__wrapper">
-      <div className="top">
-        <div className="logo">
-          <Image src="/assets/icons/logo.svg" alt="Logo" width={40} height={40} />
-        </div>
-        <div className="sidebar-controls">
-          <label className="theme__toggle">
-            <input 
-              type="checkbox" 
-              checked={theme === 'dark'} 
-              onChange={toggleTheme} 
-              className="hidden" 
-            />
-            <div className="icon__container">
-              {theme === 'light' ? <Sun className="sun" /> : <Moon className="moon" />}
+        <nav id="navbar" className={`${isScrolled ? 'drop' : ''}`}>
+          <div className="flex items-center justify-between w-full">
+            <div className="logo">
+              <Image src="/assets/icons/logo.svg" alt="Logo" width={30} height={40} />
             </div>
-          </label>
-          <button className="close-btn icon__container" onClick={toggleSidebar}>
-            <X />
-          </button>
-        </div>
-      </div>
-      <div className="middle navlinks">
-        <a href="#header" className="navitem" onClick={toggleSidebar}>Home</a>
-        <a href="#about" className="navitem" onClick={toggleSidebar}>About</a>
-        <a href="#services" className="navitem" onClick={toggleSidebar}>Interests</a>
-        <a href="#projects" className="navitem" onClick={toggleSidebar}>Projects</a>
-        <a href="#contact" className="navitem" onClick={toggleSidebar}>Contact</a>
-      </div>
-    </div>
-  </aside>,
-  document.body
-)}
-      <AnimateOnScroll animation="fade-down">
-      <section id="header" className="bg__secondary relative min-h-screen">
-        <div className="spotlight"></div>
-        <div className="container" style={{ position: 'relative' }}>
-          <div className="me" style={{ width: '100%', height: '100%', minHeight: '500px', position:'absolute' }}>
-            <Spline scene="https://prod.spline.design/OXJlZSnAa9Zq9-Lu/scene.splinecode" />
-          </div>
-          <div className="grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', zIndex: 1, position: 'relative', pointerEvents: 'none' }}>
-            <div className="empty"></div>
-            <div className="user__info" style={{ textAlign: 'center'}}>
-              <p className='text__muted' style={{ margin:'5px 0'}}>Yes, my name is</p>
-              <h1 className="title" style={{ color: '#5100ff', fontWeight:'bold', margin:'5px 0'}}>Unique Shrestha</h1>
-              <p className='text__muted' style={{ margin:'5px 0'}}>and I'm a</p>
-              <div className="title">
-                <Typewriter
-                  onInit={(typewriter) => {
-                    typewriter
-                      .typeString("Developer")
-                      .pauseFor(1000)
-                      .deleteAll()
-                      .typeString("Designer")
-                      .pauseFor(1000)
-                      .start();
-                  }}
-                  options={{
-                    loop: true,
-                  }}
-                />
-              </div>
-              <div className="flex buttons" style={{ justifyContent: 'center' }}>
-                <div className="flex social__handles">
-                  <a href="https://github.com/unique-stha" target="_blank" className="icon__container handle" style={{ pointerEvents: 'auto' }}>
-                    <Image src="../assets/icons/github.svg" alt="GitHub" width={24} height={24} />
-                  </a>
-                  <a href="https://www.linkedin.com/in/unique-stha" target="_blank" className="icon__container handle" style={{ pointerEvents: 'auto' }}>
-                    <Image src="../assets/icons/linkedin.svg" alt="LinkedIn" width={24} height={24} />
-                  </a>
+            <div className="nav__routes hidden md:flex space-x-6">
+              <a href="#header" className="route">Home</a>
+              <a href="#about" className="route">About</a>
+              <a href="#services" className="route">Interests</a>
+              <a href="#projects" className="route">Projects</a>
+              <a href="#contact" className="route">Contact</a>
+            </div>
+            <div className="navbar-controls">
+              <label className="theme__toggle">
+                <input type="checkbox" checked={theme === 'dark'} onChange={toggleTheme} className="hidden" />
+                <div className="icon__container">
+                  {theme === 'light' ? <Sun className="sun" /> : <Moon className="moon" />}
                 </div>
-                <a href="#contact" className="btn btn__primary" style={{ pointerEvents: 'auto' }}>Contact Me</a>
+              </label>
+              <div className="icon__container menu__btn md:hidden">
+                <Menu onClick={toggleSidebar} />
               </div>
             </div>
           </div>
-        </div>
-      </section>
+        </nav>
+      )}
+
+      {isSidebarOpen && typeof window !== 'undefined' && createPortal(
+        <aside className="sidebar visible">
+          <div className="sidebar__wrapper">
+            <div className="top">
+              <div className="logo">
+                <Image src="/assets/icons/logo.svg" alt="Logo" width={40} height={40} />
+              </div>
+              <div className="sidebar-controls">
+                <label className="theme__toggle">
+                  <input 
+                    type="checkbox" 
+                    checked={theme === 'dark'} 
+                    onChange={toggleTheme} 
+                    className="hidden" 
+                  />
+                  <div className="icon__container">
+                    {theme === 'light' ? <Sun className="sun" /> : <Moon className="moon" />}
+                  </div>
+                </label>
+                <button className="close-btn icon__container" onClick={toggleSidebar}>
+                  <X />
+                </button>
+              </div>
+            </div>
+            <div className="middle navlinks">
+              <a href="#header" className="navitem" onClick={toggleSidebar}>Home</a>
+              <a href="#about" className="navitem" onClick={toggleSidebar}>About</a>
+              <a href="#services" className="navitem" onClick={toggleSidebar}>Interests</a>
+              <a href="#projects" className="navitem" onClick={toggleSidebar}>Projects</a>
+              <a href="#contact" className="navitem" onClick={toggleSidebar}>Contact</a>
+            </div>
+          </div>
+        </aside>,
+        document.body
+      )}
+
+      <AnimateOnScroll animation="fade-down">
+        <section id="header" className="bg__secondary relative min-h-screen">
+          <div className="spotlight"></div>
+          <div className="container" style={{ position: 'relative' }}>
+            <div className="me" style={{ width: '100%', height: '100%', minHeight: '500px', position:'absolute' }}>
+              <Spline scene="https://prod.spline.design/OXJlZSnAa9Zq9-Lu/scene.splinecode" />
+            </div>
+            <div className="grid" style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', alignItems: 'center', zIndex: 1, position: 'relative', pointerEvents: 'none' }}>
+              <div className="empty"></div>
+              <div className="user__info" style={{ textAlign: 'center'}}>
+                <p className='text__muted' style={{ margin:'5px 0'}}>Yes, my name is</p>
+                <h1 className="title" style={{ color: '#5100ff', fontWeight:'bold', margin:'5px 0'}}>Unique Shrestha</h1>
+                <p className='text__muted' style={{ margin:'5px 0'}}>and I'm a</p>
+                <div className="title">
+                  <Typewriter
+                    onInit={(typewriter) => {
+                      typewriter
+                        .typeString("Developer")
+                        .pauseFor(1000)
+                        .deleteAll()
+                        .typeString("Designer")
+                        .pauseFor(1000)
+                        .start();
+                    }}
+                    options={{
+                      loop: true,
+                    }}
+                  />
+                </div>
+                <div className="flex buttons" style={{ justifyContent: 'center' }}>
+                  <div className="flex social__handles">
+                    <a href="https://github.com/unique-stha" target="_blank" className="icon__container handle" style={{ pointerEvents: 'auto' }}>
+                      <Image src="/assets/icons/github.svg" alt="GitHub" width={24} height={24} />
+                    </a>
+                    <a href="https://www.linkedin.com/in/unique-stha" target="_blank" className="icon__container handle" style={{ pointerEvents: 'auto' }}>
+                      <Image src="/assets/icons/linkedin.svg" alt="LinkedIn" width={24} height={24} />
+                    </a>
+                  </div>
+                  <a href="#contact" className="btn btn__primary" style={{ pointerEvents: 'auto' }}>Contact Me</a>
+                </div>
+              </div>
+            </div>
+          </div>
+        </section>
       </AnimateOnScroll>
       <AnimateOnScroll animation="fade-down">
       <section id="about">
@@ -420,7 +435,7 @@ const HomePage = () => {
                 </h2>
                 <p className="description">Feel free to reach out for projects, collaborations, or web/app development inquiries via the form or email!</p>
               </div>
-              <Image src="../assets/icons/list-option-ui.svg" alt="List UI" className="list__ui" width={100} height={100} style={{width:'100%',heght:'auto', paddingTop:'155px',paddingLeft:'350px', position:'absolute'}}/>
+              <Image src="/assets/icons/list-option-ui.svg" alt="List UI" className="list__ui" width={100} height={100} style={{width:'100%',heght:'auto', paddingTop:'155px',paddingLeft:'350px', position:'absolute'}}/>
             </div>
             <div className="box">
               <div className="cluster">
@@ -480,10 +495,10 @@ const HomePage = () => {
           </div>
           <div className="flex__center footer-handle-container">
           <a href="https://github.com/unique-stha" target="_blank" className="icon__container handle" style={{ pointerEvents: 'auto' }}>
-                    <Image src="../assets/icons/github.svg" alt="GitHub" width={24} height={24} />
+                    <Image src="/assets/icons/github.svg" alt="GitHub" width={24} height={24} />
                   </a>
                   <a href="https://www.linkedin.com/in/unique-stha" target="_blank" className="icon__container handle" style={{ pointerEvents: 'auto' }}>
-                    <Image src="../assets/icons/linkedin.svg" alt="LinkedIn" width={24} height={24} />
+                    <Image src="/assets/icons/linkedin.svg" alt="LinkedIn" width={24} height={24} />
                   </a>
           </div>
           <div className="flex__center copyright ">
