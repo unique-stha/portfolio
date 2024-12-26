@@ -14,7 +14,7 @@ const nextConfig = {
     ],
   },
   experimental: {
-    esmExternals: 'loose', // Add this line
+    esmExternals: 'loose', 
   },
   // Update webpack config
   webpack: (config, { isServer }) => {
@@ -34,7 +34,13 @@ const nextConfig = {
       'react-native-fs': false,
       child_process: false,
     };
+    if (isServer) {
+      config.externals = [...(config.externals || []), '@splinetool/react-spline'];
+    }
 
     return config;
   },
+  trailingSlash: true,
+  assetPrefix: '',
 };
+module.exports = nextConfig;
